@@ -64,6 +64,10 @@ class Specification:
     def is_satisfied(self, item):
         pass
 
+    def __and__(self, other):
+        # large_blue = large & ColorSpecification(Color.BLUE)
+        return AndSpecification(self, other)
+
 class ColorSpecification(Specification):
 
     def __init__(self, color):
@@ -80,14 +84,6 @@ class SizeSpecification(Specification):
     def is_satisfied(self, item):
         return item.size == self.size
 
-class AndSpecification(Specification):
-    def __init__(self, *args):
-        self.args = args
-
-    def is_satisfied(self, item):
-        return all(map(
-            lambda spec: spec.is_satisfied(item), self.args
-        ))
 
 class Filter:
     def filter(self, items, spec):
@@ -124,5 +120,20 @@ if __name__ == '__main__':
     for p in pf.filter(products, large):
         print(p.name)
 
+# Combinator ---
+class AndSpecification(Specification):
+    def __init__(self, *args):
+        self.args = args
 
-    
+    def is_satisfied(self, item):
+        return all(map(
+            lambda spec: spec.is_satisfied(item), self.args
+        ))
+# end: combinator ---
+
+# large_blue = AndSpecification(large, ColorSpecification(Color.BLUE))
+
+large_blue = AndSpecification(large, ColorSpecification(Color.BLUE))
+for p in pf.filter(products, large_blue):
+    print('Product(large and blue):', p.name)
+
