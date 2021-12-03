@@ -29,7 +29,7 @@ class RelationshipBrowser:
     def find_all_children_of(self, name): pass
 
 
-# low level moduel (good)
+# low level module (good)
 class Relationships(RelationshipBrowser):
     def __init__(self):
  	    self.relations = []
